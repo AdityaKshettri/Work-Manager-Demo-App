@@ -9,21 +9,21 @@ import java.net.URL
 import java.util.*
 import javax.net.ssl.HttpsURLConnection
 
-class FetchUserWorker(context: Context, workerParameters: WorkerParameters) :
+class FetchPostWorker(context: Context, workerParameters: WorkerParameters) :
     Worker(context, workerParameters) {
 
-    private val TAG = FetchUserWorker::class.java.simpleName
+    private val TAG = FetchPostWorker::class.java.simpleName
 
     override fun doWork(): Result {
-        return if (fetchUser()) {
+        return if (fetchPost()) {
             Result.success()
         } else {
             Result.failure()
         }
     }
 
-    private fun fetchUser(): Boolean {
-        val url = URL("https://jsonplaceholder.typicode.com/users/1")
+    private fun fetchPost(): Boolean {
+        val url = URL("https://jsonplaceholder.typicode.com/posts/1")
         val connection = url.openConnection() as HttpsURLConnection
         try {
             if (connection.responseCode == 200) {
@@ -34,14 +34,14 @@ class FetchUserWorker(context: Context, workerParameters: WorkerParameters) :
                 while (scanner.hasNext()) {
                     s.append(scanner.nextLine())
                 }
-                Log.i(TAG, "fetchUser() success: $s")
+                Log.i(TAG, "fetchPost() success: $s")
                 connection.disconnect()
                 return true
             } else {
-                Log.w(TAG, "fetchUser() failed: ${connection.responseMessage}")
+                Log.w(TAG, "fetchPost() failed: ${connection.responseMessage}")
             }
         } catch (e: Exception) {
-            Log.e(TAG, "fetchUser() error: $e")
+            Log.e(TAG, "fetchPost() error: $e")
         }
         return false
     }
